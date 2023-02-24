@@ -1,6 +1,4 @@
 const webpack = require("webpack");
-const paths = require("react-scripts/config/paths");
-
 const getModuleFederationConfigPath = (additionalPaths = []) => {
   const path = require("path");
   const fs = require("fs");
@@ -19,6 +17,8 @@ const getModuleFederationConfigPath = (additionalPaths = []) => {
 
 module.exports = {
   overrideWebpackConfig: ({ webpackConfig, pluginOptions }) => {
+    const paths = require("react-scripts/config/paths");
+
     const moduleFederationConfigPath = getModuleFederationConfigPath();
 
     if (moduleFederationConfigPath) {
