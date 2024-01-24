@@ -32,8 +32,8 @@ module.exports = {
         (plugin) => plugin.constructor.name === "HtmlWebpackPlugin"
       );
 
-      htmlWebpackPlugin.userOptions = {
-        ...htmlWebpackPlugin.userOptions,
+      htmlWebpackPlugin.options = {
+        ...htmlWebpackPlugin.options,
         publicPath: paths.publicUrlOrPath,
         excludeChunks: [require(moduleFederationConfigPath).name],
       };
