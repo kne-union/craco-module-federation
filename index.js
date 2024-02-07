@@ -19,7 +19,7 @@ module.exports = {
   overrideWebpackConfig: ({ webpackConfig, pluginOptions }) => {
     const paths = require("react-scripts/config/paths");
 
-    const moduleFederationConfigPath = getModuleFederationConfigPath();
+    const moduleFederationConfigPath = getModuleFederationConfigPath(pluginOptions?.additionalPaths);
 
     if (moduleFederationConfigPath) {
       webpackConfig.output.publicPath = "auto";
