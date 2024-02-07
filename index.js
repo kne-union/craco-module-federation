@@ -5,7 +5,7 @@ const getModuleFederationConfigPath = (additionalPaths = []) => {
     const appDirectory = fs.realpathSync(process.cwd());
     const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
-    const moduleFederationConfigFiles = ["modulefederation.config.js", ...additionalPaths,];
+    const moduleFederationConfigFiles = [...additionalPaths, "modulefederation.config.js"];
     return moduleFederationConfigFiles
         .map(resolveApp)
         .filter(fs.existsSync)
@@ -27,7 +27,7 @@ module.exports = {
 
             const htmlWebpackPlugin = webpackConfig.plugins.find((plugin) => plugin.constructor.name === "HtmlWebpackPlugin");
 
-            const moduleFederationConfig = (typeof pluginOptions?.middleware === 'function' ? pluginOptions?.middleware : (config) => config)(require(moduleFederationConfigPath));
+            const moduleFederationConfig = (typeof pluginOptions?.middleware === 'function' ? pluginOptions.middleware : (config) => config)(require(moduleFederationConfigPath));
 
             htmlWebpackPlugin.options = {
                 ...htmlWebpackPlugin.options,
