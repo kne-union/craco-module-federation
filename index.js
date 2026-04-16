@@ -1,7 +1,9 @@
-const webpack = require("webpack");
+const {
+    ModuleFederationPlugin,
+} = require('@module-federation/enhanced/webpack');
 const getModuleFederationConfigPath = (additionalPaths = []) => {
-    const path = require("path");
-    const fs = require("fs");
+    const path = require("node:path");
+    const fs = require("node:fs");
     const appDirectory = fs.realpathSync(process.cwd());
     const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
@@ -14,12 +16,12 @@ const getModuleFederationConfigPath = (additionalPaths = []) => {
 
 module.exports = {
     overrideWebpackConfig: ({webpackConfig, pluginOptions}) => {
-        const paths = require("react-scripts/config/paths");
+        const paths = require("@kne/react-scripts/config/paths");
 
         const moduleFederationConfigPath = getModuleFederationConfigPath(pluginOptions?.additionalPaths || []);
 
         if (moduleFederationConfigPath) {
-            webpackConfig.output.publicPath = "auto";
+            //webpackConfig.output.publicPath = "auto";
 
             if (pluginOptions?.useNamedChunkIds) {
                 webpackConfig.optimization.chunkIds = "named";
@@ -35,7 +37,7 @@ module.exports = {
                 excludeChunks: [moduleFederationConfig.name],
             };
 
-            webpackConfig.plugins = [...webpackConfig.plugins, new webpack.container.ModuleFederationPlugin(moduleFederationConfig),];
+            webpackConfig.plugins = [...webpackConfig.plugins, new ModuleFederationPlugin(moduleFederationConfig),];
 
             // webpackConfig.module = {
             //   ...webpackConfig.module,
