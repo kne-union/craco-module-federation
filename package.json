@@ -1,6 +1,6 @@
 {
   "name": "@kne/craco-module-federation",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Add module federation support to your CRA5 application without ejecting",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {
-    "@craco/craco": ">=6",
+    "@kne/craco": ">=6",
     "webpack": ">=5"
   },
   "devDependencies": {
