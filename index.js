@@ -1,6 +1,39 @@
-const {
-    ModuleFederationPlugin,
-} = require('@module-federation/enhanced/webpack');
+const withDocumentDisabled = (callback) => {
+    const hasOwnDocument = Object.prototype.hasOwnProperty.call(globalThis, "document");
+    const documentDescriptor = Object.getOwnPropertyDescriptor(globalThis, "document");
+
+    try {
+        Object.defineProperty(globalThis, "document", {
+            value: undefined, configurable: true, writable: true,
+        });
+    } catch (e) {
+        try {
+            globalThis.document = undefined;
+        } catch (error) {
+        }
+    }
+
+    try {
+        return callback();
+    } finally {
+        if (documentDescriptor) {
+            Object.defineProperty(globalThis, "document", documentDescriptor);
+        } else if (hasOwnDocument) {
+            globalThis.document = undefined;
+        } else {
+            delete globalThis.document;
+        }
+    }
+};
+const getModuleFederationPlugin = () => {
+    const EnhancedModuleFederationPlugin = require('@module-federation/enhanced/webpack').ModuleFederationPlugin;
+
+    return class ModuleFederationPlugin extends EnhancedModuleFederationPlugin {
+        apply(compiler) {
+            return withDocumentDisabled(() => super.apply(compiler));
+        }
+    };
+};
 const getModuleFederationConfigPath = (additionalPaths = []) => {
     const path = require("node:path");
     const fs = require("node:fs");
@@ -30,14 +63,18 @@ module.exports = {
             const htmlWebpackPlugin = webpackConfig.plugins.find((plugin) => plugin.constructor.name === "HtmlWebpackPlugin");
 
             const moduleFederationConfig = (typeof pluginOptions?.middleware === 'function' ? pluginOptions.middleware : (config) => config)(require(moduleFederationConfigPath));
+            const normalizedModuleFederationConfig = {
+                ...moduleFederationConfig, dataPrefetch: false,
+            };
+            const ModuleFederationPlugin = getModuleFederationPlugin();
 
             htmlWebpackPlugin.options = {
                 ...htmlWebpackPlugin.options,
                 publicPath: paths.publicUrlOrPath,
-                excludeChunks: [moduleFederationConfig.name],
+                excludeChunks: [normalizedModuleFederationConfig.name],
             };
 
-            webpackConfig.plugins = [...webpackConfig.plugins, new ModuleFederationPlugin(moduleFederationConfig),];
+            webpackConfig.plugins = [...webpackConfig.plugins, new ModuleFederationPlugin(normalizedModuleFederationConfig),];
 
             // webpackConfig.module = {
             //   ...webpackConfig.module,
