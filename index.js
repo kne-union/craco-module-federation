@@ -54,7 +54,7 @@ module.exports = {
         const moduleFederationConfigPath = getModuleFederationConfigPath(pluginOptions?.additionalPaths || []);
 
         if (moduleFederationConfigPath) {
-            //webpackConfig.output.publicPath = "auto";
+            webpackConfig.output.publicPath = "auto";
 
             if (pluginOptions?.useNamedChunkIds) {
                 webpackConfig.optimization.chunkIds = "named";
