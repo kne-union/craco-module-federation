@@ -63,9 +63,7 @@ module.exports = {
             const htmlWebpackPlugin = webpackConfig.plugins.find((plugin) => plugin.constructor.name === "HtmlWebpackPlugin");
 
             const moduleFederationConfig = (typeof pluginOptions?.middleware === 'function' ? pluginOptions.middleware : (config) => config)(require(moduleFederationConfigPath));
-            const normalizedModuleFederationConfig = {
-                ...moduleFederationConfig, dataPrefetch: false,
-            };
+            const normalizedModuleFederationConfig = Object.assign({}, moduleFederationConfig);
             const ModuleFederationPlugin = getModuleFederationPlugin();
 
             htmlWebpackPlugin.options = {
