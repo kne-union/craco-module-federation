@@ -14,7 +14,7 @@ const getModuleFederationConfigPath = (additionalPaths = []) => {
 
 module.exports = {
     overrideWebpackConfig: ({webpackConfig, pluginOptions}) => {
-        const paths = require("react-scripts/config/paths");
+        const paths = require("@kne/react-scripts/config/paths");
 
         const moduleFederationConfigPath = getModuleFederationConfigPath(pluginOptions?.additionalPaths || []);
 
